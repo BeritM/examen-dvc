@@ -4,14 +4,14 @@ from pathlib import Path
 import click
 import logging
 from sklearn.model_selection import train_test_split
-from check_structure import check_existing_file, check_existing_folder
+#from check_structure import check_existing_file, check_existing_folder
 import os
 
 
 @click.command()
-@click.argument('input_filepath', type=click.Path(exists=False), required=0)
-@click.argument('output_filepath', type=click.Path(exists=False), required=0)
-def main(input_filepath, output_filepath):
+@click.argument('input_folder', type=click.Path(exists=False), required=0)
+@click.argument('output_folder', type=click.Path(exists=False), required=0)
+def main(input_folder, output_folder):
     """ Runs data processing script to split raw data from (../raw_data) into
         X_test, X_train, y_test and y_train (saved in../preprocessed).
     """
@@ -43,8 +43,10 @@ def save_dataframe(X_train, X_test, y_train, y_test, output_folder):
     # Save dataframes to their respective output file paths
     for file, filename in zip([X_train, X_test, y_train, y_test], ['X_train', 'X_test', 'y_train', 'y_test']):
         output_filepath = os.path.join(output_folder, f'{filename}.csv')
-        if check_existing_file(output_filepath):
+        if os.path.exists(output_folder):
             file.to_csv(output_filepath, index=False)
+        else:
+            print("This output folder doesn't exist.")
 
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
