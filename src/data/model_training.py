@@ -33,6 +33,6 @@ elif best_model == "SVR":
 print("Training the model...")
 
 model.fit(X_train, y_train)
-joblib.dump(model, f"./models/trained_{best_model}.pkl")
+joblib.dump(model, f"./models/trained_model.pkl")
 
-print(f"Model saved: trained_{best_model}.pkl")
+print(f"Model saved: trained_model.pkl")
