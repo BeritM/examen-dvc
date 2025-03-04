@@ -15,7 +15,7 @@ def main(input_folder="./data/processed_data", output_folder="./models"):
     input_filepath_y_train = f"{input_folder}/y_train.csv"
 
     X_train, y_train = load_data(input_filepath_X_train, input_filepath_y_train)
-    best_params = perform_grid_search(X_train, y_train, output_folder)
+    perform_grid_search(X_train, y_train, output_folder)
 
 
     logger = logging.getLogger(__name__)
@@ -62,7 +62,8 @@ def perform_grid_search(X_train, y_train, output_folder):
         },
     }
 
-    best_models = {}
+    #best_models = {}
+    results = []
 
     for model_name, model_info in models.items():
         print(f"\nStarting GridSearch for model: {model_name}")
@@ -85,10 +86,25 @@ def perform_grid_search(X_train, y_train, output_folder):
         joblib.dump(best_model, model_path)
 
         # Save best hyperparameters
-        print(f"best hyperparameters for model {model_name}: {grid_search.best_params_}")
-        best_models[model_name] = grid_search.best_params_
+        print(f"Best hyperparameters for model {model_name}: {grid_search.best_params_}")
+        print(f"Best neg. MSE for model {model_name}: {grid_search.best_score_}")
+        #best_models[model_name] = grid_search.best_params_
 
-    return best_models
+        results.append({
+            "model": model_name,
+            "best_score": grid_search.best_score_,
+            "best_params": grid_search.best_params_
+        })
+
+    results_df = pd.DataFrame(results).sort_values(by="best_score", ascending=False)
+    results_df.to_csv(f"{output_folder}/best_models.csv", index=False)
+    print("\nBest model and parameters:")
+    print(results_df.head(1))
+
+    return results_df
+
+    #return best_models
+
 
 if __name__ == "__main__":
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
