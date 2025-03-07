@@ -6,17 +6,15 @@ import os
 from sklearn.preprocessing import MinMaxScaler
 
 def main(input_folder="./data/processed_data", output_folder="./data/processed_data"):
-    """ Runs data processing script to split raw data from (../raw_data) into
-        X_test, X_train, y_test and y_train (saved in../preprocessed).
+    """ Runs data processing script to normalize X_train and X_test from (../processed_data) into
+        X_train_scaled, X_test_scaled (saved in../processed_data).
     """
     logger = logging.getLogger(__name__)
     logger.info('normalize features of the dataset')
 
-    input_folder = "./data/processed_data"
     input_filepath_X_train = f"{input_folder}/X_train.csv"
     input_filepath_X_test = f"{input_folder}/X_test.csv"
-    output_folder = input_folder
-
+    
     data_processing(input_filepath_X_train, input_filepath_X_test, output_folder)
 
 def data_processing(input_filepath_X_train, input_filepath_X_test, output_folder):
