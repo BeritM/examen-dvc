@@ -1,0 +1,52 @@
+stages:
+  prepare01_data_splitting:
+    cmd: python src/data/data_splitting.py
+    deps:
+    - data/raw_data
+    - src/data/data_splitting.py
+    outs:
+    - data/processed_data/X_test.csv
+    - data/processed_data/X_train.csv
+    - data/processed_data/y_test.csv
+    - data/processed_data/y_train.csv
+  data_normalization:
+    cmd: python src/data/data_normalization.py
+    deps:
+    - data/processed_data/X_test.csv
+    - data/processed_data/X_train.csv
+    - src/data/data_normalization.py
+    outs:
+    - data/processed_data/X_test_scaled.csv
+    - data/processed_data/X_train_scaled.csv
+  grid_search:
+    cmd: python src/models/grid_search.py
+    deps:
+    - data/processed_data/X_test_scaled.csv
+    - data/processed_data/X_train_scaled.csv
+    - src/models/grid_search.py
+    outs:
+    - models/best_model_GradientBoosting.pkl
+    - models/best_model_RandomForest.pkl
+    - models/best_model_SVR.pkl
+    - models/best_models.csv
+    - models/final_best_model.pkl
+  train:
+    cmd: python src/models/model_training.py
+    deps:
+    - data/processed_data/X_train_scaled.csv
+    - data/processed_data/y_train.csv
+    - models/best_models.csv
+    - models/final_best_model.pkl
+    - src/models/model_training.py
+    outs:
+    - models/trained_model.pkl
+  evaluation:
+    cmd: python src/models/model_evaluation.py
+    deps:
+    - data/processed_data/X_test_scaled.csv
+    - data/processed_data/y_test.csv
+    - models/trained_model.pkl
+    - src/models/model_evaluation.py
+    metrics:
+    - metrics/scores.json:
+        cache: false

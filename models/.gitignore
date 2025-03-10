@@ -1,4 +1,6 @@
 /best_model_GradientBoosting.pkl
 /best_model_RandomForest.pkl
 /best_model_SVR.pkl
+/best_models.csv
+/final_best_model.pkl
 /trained_model.pkl

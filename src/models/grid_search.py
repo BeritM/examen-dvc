@@ -98,6 +98,12 @@ def perform_grid_search(X_train, y_train, output_folder):
 
     results_df = pd.DataFrame(results).sort_values(by="best_score", ascending=False)
     results_df.to_csv(f"{output_folder}/best_models.csv", index=False)
+
+    best_model_name = results_df.iloc[0]["model"]
+    best_model_path = f"{output_folder}/best_model_{best_model_name}.pkl"
+    best_model = joblib.load(best_model_path)
+    joblib.dump(best_model, f"{output_folder}/final_best_model.pkl")
+
     print("\nBest model and parameters:")
     print(results_df.head(1))
 
